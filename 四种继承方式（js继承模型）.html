@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+</body>
+<script>
+    //整理JS中继承模型，用文字和代码说明
+
+    //JS中的继承：某个对象可以访问到另一个对象中的属性和方法，我们认为它们之间存在继承关系
+    //js中继承的主流实现方式：
+    //1.基于原型链实现继承
+    //1.a.扩展原型对象实现继承--一个函数创建好之后，就会有一个默认的原型对象，给这个对象添加属性和方法，我们把这样的方式成为扩展原型对象继承；
+    function F(){};
+    F.prototype.run=function(){
+        console.log("run");
+    };
+    var p=new F();
+    p.run();
+
+    //1.b.替换原型对象实现继承--当使用扩展原型对象来实现给原型对象扩展多个属性和方法的时候，会出现一些重复的代码，将这些重复代码封装，即给构造函数添加一个新的原型对象，并使构造函数指向新的原型对象；
+    function F(){};
+    F.prototype={
+        constructor:F,
+        fly:function(){
+            console.log("fly");
+        }
+    };
+    var p =new F();
+    p.fly();
+
+    //2.原型式继承（经典继承）--创建一个新的对象，让新的对象可以继承自指定的对象，从而这个新的对象既可以访问到自己的属性，也可以访问到指定的对象的属性；
+    var f={name:"zs",age:18,gender:"male"};
+    function F(){};
+    F.prototype=f;
+    var p=new F();
+    p.height=175;
+    console.log(p.name);
+    console.log(p.height);
+    //tip:现代浏览器中，Object.create()实现了原型式继承；
+
+    //3.混入继承--使用for...in循环将某个对象中的属性分别拷贝到另一个对象中，最大限度的减少重复代码；
+    var f1={name:"zs",age:18,gender:"male"};
+    var f2={};
+    for(var key in f1){
+        f2[key]=f1[key];
+    }
+    console.log(f2);
+
+    //4.借用构造函数实现继承--至少有两个构造函数（Parent,Child）,如果Parent中的代码完全适用于Child,可以在Child函数内部使用上下文模式执行Parent构造函数，从而给Child实例添加属性；如果Parent属性不完全适用于Child,不建议使用构造函数；
+    function Parent(name,age,gender){
+        this.name=name;
+        this.age=age;
+        this.gender=gender;
+    }
+    function Child(name,age,gender,height){
+        Parent.call(this,name,age,gender);
+        this.height=height;
+    }
+    var f=new Child("zs","18","male","175");
+    console.log(f);
+
+</script>
+</html>
